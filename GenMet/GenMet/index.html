@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GenMet — Where Communities Breathe</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   GENMET — DESIGN SYSTEM
+   Aesthetic: Liquid Noir — dark, organic, alive
+   ══════════════════════════════════════════════ */
+
+:root {
+  --ink:       #080810;
+  --ink2:      #0f0f1a;
+  --ink3:      #171726;
+  --ink4:      #1f1f32;
+  --ink5:      #2a2a42;
+  --lime:      #c8f135;
+  --lime2:     #a8d420;
+  --coral:     #ff6b6b;
+  --sky:       #38bdf8;
+  --gold:      #fbbf24;
+  --muted:     #5a5a7e;
+  --muted2:    #8888aa;
+  --snow:      #eeeef8;
+  --white:     #ffffff;
+  --danger:    #ef4444;
+  --success:   #22c55e;
+  --warn:      #f59e0b;
+  --r:         18px;
+  --r-sm:      10px;
+  --r-xs:      6px;
+  --shadow:    0 24px 64px rgba(0,0,0,0.6);
+  --glow-lime: 0 0 40px rgba(200,241,53,0.15);
+  --glow-coral:0 0 40px rgba(255,107,107,0.15);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { height:100%; font-size:16px; }
+
+body {
+  height:100%;
+  font-family:'Outfit',sans-serif;
+  background:var(--ink);
+  color:var(--snow);
+  overflow:hidden;
+  cursor:default;
+}
+
+/* Custom cursor */
+* { cursor:inherit; }
+a, button, [onclick], label[for], .clickable { cursor:pointer; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width:3px; height:3px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--ink5); border-radius:99px; }
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+
+/* ══ NOISE TEXTURE OVERLAY ══ */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.5;
+}
+
+/* ══ TYPOGRAPHY ══ */
+.font-display { font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; }
+.font-italic  { font-family:'Playfair Display',serif; }
+
+/* ══ SCREENS ══ */
+.screen { display:none; height:100vh; width:100vw; position:fixed; inset:0; }
+.screen.active { display:flex; }
+
+/* ══════════════════════════════════════════════
+   LANDING PAGE
+   ══════════════════════════════════════════════ */
+#screen-landing {
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background: var(--ink);
+  overflow:hidden;
+  position:relative;
+}
+
+/* Animated background orbs */
+.orb {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:0.35;
+  animation:orbFloat 8s ease-in-out infinite;
+}
+.orb-1 { width:500px;height:500px; background:radial-gradient(circle,#c8f135,transparent 70%); top:-150px;right:-100px; animation-delay:0s; }
+.orb-2 { width:400px;height:400px; background:radial-gradient(circle,#ff6b6b,transparent 70%); bottom:-120px;left:-80px; animation-delay:-3s; }
+.orb-3 { width:300px;height:300px; background:radial-gradient(circle,#38bdf8,transparent 70%); top:40%;left:20%; animation-delay:-5s; }
+
+@keyframes orbFloat {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33%      { transform:translate(20px,-30px) scale(1.05); }
+  66%      { transform:translate(-15px,15px) scale(0.97); }
+}
+
+/* Grid lines */
+.land-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(200,241,53,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,241,53,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+
+.land-center { position:relative; z-index:2; text-align:center; }
+
+/* GENMET wordmark */
+.land-wordmark {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,15vw,160px);
+  line-height:0.9;
+  letter-spacing:-2px;
+  background: linear-gradient(135deg, #c8f135 0%, #fff 40%, #ff6b6b 80%, #c8f135 100%);
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradShift 4s ease infinite;
+  filter:drop-shadow(0 0 40px rgba(200,241,53,0.3));
+}
+@keyframes gradShift {
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+.land-tagline {
+  font-size:14px;
+  color:var(--muted2);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-top:8px;
+  margin-bottom:4px;
+}
+
+.land-credit {
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:48px;
+}
+.land-credit a {
+  color:var(--lime);
+  text-decoration:none;
+  font-weight:600;
+  transition:.2s;
+}
+.land-credit a:hover { color:#fff; text-shadow:0 0 12px var(--lime); }
+
+/* CTA Buttons */
+.land-btns { display:flex; flex-direction:column; gap:12px; width:320px; margin:0 auto; }
+
+.cta-btn {
+  position:relative;
+  padding:17px 24px;
+  border:none;
+  border-radius:var(--r);
+  font-family:'Outfit',sans-serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+  overflow:hidden;
+  z-index:0;
+}
+.cta-btn::before {
+  content:'';
+  position:absolute;inset:0;
+  background:inherit;
+  filter:blur(16px);
+  opacity:0;
+  transition:.25s;
+  z-index:-1;
+}
+.cta-btn:hover { transform:translateY(-3px) scale(1.02); }
+.cta-btn:hover::before { opacity:0.5; }
+.cta-btn:active { transform:translateY(0) scale(0.98); }
+
+.cta-join  { background:var(--lime);  color:var(--ink); box-shadow:0 8px 32px rgba(200,241,53,0.3); }
+.cta-login { background:var(--ink3);  color:var(--snow); border:1px solid var(--ink5); }
+.cta-admin { background:transparent; color:var(--muted2); border:1px solid var(--ink5); font-size:13px; padding:12px; }
+.cta-admin:hover { border-color:var(--coral); color:var(--coral); }
+
+.land-divider { text-align:center; font-size:11px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; }
+
+/* User counter */
+.user-counter {
+  position:fixed;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:var(--ink3);
+  border:1px solid var(--ink5);
+  padding:8px 18px;
+  border-radius:99px;
+  font-size:12px;
+  color:var(--muted2);
+  z-index:10;
+  backdrop-filter:blur(10px);
+}
+.counter-dot {
+  width:7px; height:7px;
+  background:var(--lime);
+  border-radius:50%;
+  box-shadow:0 0 8px var(--lime);
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+.counter-num { font-weight:700; color:var(--lime); }
+
+/* ══════════════════════════════════════════════
+   MODALS / OVERLAYS
+   ══════════════════════════════════════════════ */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(8,8,16,0.85);
+  backdrop-filter:blur(12px) saturate(80%);
+  z-index:500;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.overlay.open { display:flex; animation:fadeIn .2s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.modal {
+  background:var(--ink2);
+  border:1px solid var(--ink5);
+  border-radius:24px;
+  padding:36px;
+  width:420px;
+  max-width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+  box-shadow:var(--shadow), 0 0 0 1px rgba(200,241,53,0.05);
+}
+@keyframes slideUp { from{transform:translateY(30px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+
+.modal-close {
+  position:absolute; top:16px; right:16px;
+  width:32px; height:32px;
+  background:var(--ink4);
+  border:none;
+  border-radius:8px;
+  color:var(--muted2);
+  font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+  transition:.15s;
+}
+.modal-close:hover { background:var(--ink5); color:var(--snow); }
+
+.modal-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  letter-spacing:1px;
+  margin-bottom:4px;
+  line-height:1;
+}
+.modal-sub { font-size:13px; color:var(--muted2); margin-bottom:28px; line-height:1.5; }
+
+/* ── Form elements ── */
+.field-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.field-label { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted2); font-weight:600; }
+
+.inp {
+  width:100%;
+  padding:14px 16px;
+  background:var(--ink3);
+  border:1.5px solid var(--ink5);
+  border-radius:var(--r-sm);
+  color:var(--snow);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  outline:none;
+  transition:all .2s;
+}
+.inp:focus { border-color:var(--lime); box-shadow:0 0 0 3px rgba(200,241,53,0.1); }
+.inp::placeholder { color:var(--muted); }
+.inp:disabled { opacity:0.5; }
+textarea.inp { resize:none; min-height:80px; }
+
+/* ── Buttons ── */
+.btn {
+  padding:14px 20px;
+  border:none;
+  border-radius:var(--r-sm);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn:hover { transform:translateY(-2px); }
+.btn:active { transform:translateY(0); }
+
+.btn-lime { background:var(--lime); color:var(--ink); width:100%; box-shadow:0 4px 24px rgba(200,241,53,0.25); }
+.btn-lime:hover { background:var(--lime2); box-shadow:0 8px 32px rgba(200,241,53,0.4); }
+.btn-coral { background:var(--coral); color:#fff; width:100%; }
+.btn-ghost { background:var(--ink4); color:var(--snow); border:1px solid var(--ink5); }
+.btn-ghost:hover { border-color:var(--muted); }
+.btn-danger { background:rgba(239,68,68,0.12); color:var(--danger); border:1px solid rgba(239,68,68,0.2); }
+.btn-danger:hover { background:rgba(239,68,68,0.2); }
+
+/* ── Credential reveal box ── */
+.cred-box {
+  background:var(--ink);
+  border:1.5px dashed var(--lime);
+  border-radius:var(--r);
+  padding:20px;
+  margin:16px 0;
+  text-align:center;
+}
+.cred-box .cred-label { font-size:11px; color:var(--muted2); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; }
+.cred-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.cred-key { font-size:12px; color:var(--muted2); }
+.cred-val { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--lime); }
+.cred-warn {
+  background:rgba(251,191,36,0.1);
+  border:1px solid rgba(251,191,36,0.3);
+  border-radius:var(--r-sm);
+  padding:12px 14px;
+  font-size:12px;
+  color:var(--gold);
+  line-height:1.6;
+  margin-top:12px;
+}
+.cred-warn strong { font-weight:700; display:block; margin-bottom:4px; }
+
+/* Avatar upload */
+.avatar-upload {
+  width:80px; height:80px;
+  border-radius:20px;
+  background:var(--ink4);
+  border:2px dashed var(--ink5);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-size:24px;
+  overflow:hidden;
+  position:relative;
+  transition:.2s;
+  margin:0 auto 20px;
+}
+.avatar-upload:hover { border-color:var(--lime); }
+.avatar-upload img { width:100%;height:100%;object-fit:cover; }
+.avatar-upload .av-hint { font-size:10px; color:var(--muted); margin-top:4px; }
+.avatar-upload input { position:absolute;inset:0;opacity:0;width:100%;height:100%; }
+
+/* ══════════════════════════════════════════════
+   MAIN APP LAYOUT
+   ══════════════════════════════════════════════ */
+#screen-app { flex-direction:row; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:68px;
+  background:var(--ink2);
+  border-right:1px solid var(--ink4);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:12px 0;
+  gap:4px;
+  flex-shrink:0;
+  z-index:10;
+  position:relative;
+}
+
+.sidebar-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:1px;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:12px;
+  padding-top:4px;
+}
+
+.nav-item {
+  width:44px; height:44px;
+  border-radius:14px;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  font-size:19px;
+  transition:all .2s;
+  position:relative;
+}
+.nav-item:hover { background:var(--ink4); color:var(--snow); }
+.nav-item.active {
+  background:rgba(200,241,53,0.12);
+  color:var(--lime);
+  box-shadow:inset 0 0 0 1px rgba(200,241,53,0.2);
+}
+
+.nav-item .notif-dot {
+  position:absolute; top:7px; right:7px;
+  width:7px;height:7px;
+  background:var(--coral);
+  border-radius:50%;
+  border:2px solid var(--ink2);
+}
+
+.sidebar-spacer { flex:1; }
+
+.user-av-mini {
+  width:36px; height:36px;
+  border-radius:11px;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  display:flex; align-items:center; justify-content:center;
+  color:var(--ink);
+  font-weight:800;
+  font-size:14px;
+  overflow:hidden;
+  border:2px solid var(--ink5);
+  transition:.2s;
+  margin-bottom:4px;
+}
+.user-av-mini:hover { border-color:var(--lime); transform:scale(1.05); }
+.user-av-mini img { width:100%;height:100%;object-fit:cover; }
+
+/* ── PANELS ── */
+.panel { display:none; flex:1; overflow:hidden; flex-direction:column; }
+.panel.active { display:flex; }
+
+/* ══════════════════════════════════════════════
+   COMMUNITIES + CHAT
+   ══════════════════════════════════════════════ */
+.chat-layout { display:flex; flex:1; overflow:hidden; }
+
+/* Communities list */
+.comm-list-panel {
+  width:268px;
+  background:var(--ink2);
+  border-right:1px solid var(--ink4);
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.clp-header {
+  padding:18px 16px 12px;
+  border-bottom:1px solid var(--ink4);
+}
+.clp-header h3 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:1px;
+  color:var(--snow);
+  margin-bottom:10px;
+}
+.search-box {
+  display:flex; align-items:center; gap:8px;
+  background:var(--ink3);
+  border:1px solid var(--ink4);
+  border-radius:var(--r-sm);
+  padding:8px 12px;
+  transition:.2s;
+}
+.search-box:focus-within { border-color:var(--lime); }
+.search-box span { color:var(--muted); font-size:14px; }
+.search-box input { background:none;border:none;outline:none;color:var(--snow);font-family:'Outfit',sans-serif;font-size:13px;flex:1; }
+.search-box input::placeholder { color:var(--muted); }
+
+.comm-scroll { overflow-y:auto; flex:1; padding:8px 0; }
+
+.comm-item {
+  display:flex; align-items:center; gap:11px;
+  padding:10px 14px;
+  transition:.15s;
+  border-left:3px solid transparent;
+  position:relative;
+}
+.comm-item:hover { background:var(--ink3); }
+.comm-item.active {
+  background:rgba(200,241,53,0.06);
+  border-left-color:var(--lime);
+}
+.comm-item.active .ci-name { color:var(--lime); }
+
+.ci-av {
+  width:42px; height:42px;
+  border-radius:13px;
+  background:var(--ink4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+  flex-shrink:0;
+  overflow:hidden;
+  border:1px solid var(--ink5);
+}
+.ci-av img { width:100%;height:100%;object-fit:cover; }
+.ci-info { flex:1; min-width:0; }
+.ci-name { font-size:14px; font-weight:600; color:var(--snow); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ci-last { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+.ci-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+.ci-time { font-size:10px; color:var(--muted); }
+.ci-badge { background:var(--lime); color:var(--ink); border-radius:99px; font-size:10px; font-weight:800; padding:2px 6px; min-width:18px; text-align:center; }
+.ci-join { font-size:10px; color:var(--lime); background:rgba(200,241,53,0.1); padding:2px 7px; border-radius:99px; border:1px solid rgba(200,241,53,0.2); }
+
+/* Chat area */
+.chat-panel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+.chat-empty {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--muted); gap:12px;
+}
+.chat-empty .ce-icon {
+  font-size:56px;
+  filter:grayscale(50%);
+  animation:floatIcon 3s ease-in-out infinite;
+}
+@keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.chat-empty p { font-size:14px; }
+
+/* Chat header */
+.chat-header {
+  padding:14px 20px;
+  border-bottom:1px solid var(--ink4);
+  display:flex; align-items:center; gap:12px;
+  background:var(--ink2);
+  flex-shrink:0;
+}
+.ch-av {
+  width:38px; height:38px;
+  border-radius:12px;
+  background:var(--ink4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+  overflow:hidden;
+  border:1px solid var(--ink5);
+}
+.ch-av img { width:100%;height:100%;object-fit:cover; }
+.ch-info { flex:1; }
+.ch-name { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:0.5px; }
+.ch-members { font-size:11px; color:var(--muted2); }
+.ch-actions { display:flex; gap:6px; }
+.icon-btn {
+  width:34px; height:34px;
+  border-radius:9px;
+  border:none; background:var(--ink4);
+  color:var(--muted2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; transition:.15s;
+}
+.icon-btn:hover { background:var(--ink5); color:var(--snow); }
+
+/* Messages */
+.messages-wrap { flex:1; overflow-y:auto; padding:20px 16px; display:flex; flex-direction:column; gap:2px; }
+
+.date-sep {
+  display:flex; align-items:center; gap:10px;
+  font-size:11px; color:var(--muted); margin:12px 0;
+}
+.date-sep::before,.date-sep::after { content:'';flex:1;height:1px;background:var(--ink4); }
+
+.msg-row { display:flex; align-items:flex-end; gap:8px; margin-bottom:1px; }
+.msg-row.mine { flex-direction:row-reverse; }
+
+.msg-av {
+  width:28px; height:28px;
+  border-radius:9px;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  display:flex; align-items:center; justify-content:center;
+  color:var(--ink); font-size:11px; font-weight:800;
+  flex-shrink:0; overflow:hidden;
+}
+.msg-av img { width:100%;height:100%;object-fit:cover; }
+.msg-av.ghost { opacity:0; pointer-events:none; }
+
+.msg-bubble {
+  max-width:62%;
+  padding:10px 14px;
+  border-radius:18px;
+  font-size:14px;
+  line-height:1.55;
+  word-break:break-word;
+  position:relative;
+  animation:bubbleIn .2s ease;
+}
+@keyframes bubbleIn { from{transform:scale(.95) translateY(4px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+
+.msg-bubble.theirs {
+  background:var(--ink3);
+  border-bottom-left-radius:4px;
+  border:1px solid var(--ink5);
+}
+.msg-bubble.mine {
+  background:linear-gradient(135deg,var(--lime) 0%,var(--lime2) 100%);
+  color:var(--ink);
+  border-bottom-right-radius:4px;
+  font-weight:500;
+}
+.msg-bubble.admin-msg {
+  background:linear-gradient(135deg,#1a1a2e,var(--ink3));
+  border:1px solid rgba(200,241,53,0.3);
+}
+
+.msg-sender { font-size:11px; font-weight:700; color:var(--lime); margin-bottom:3px; }
+.msg-sender.admin-sender { color:var(--coral); }
+.msg-time { font-size:10px; opacity:0.5; margin-top:4px; text-align:right; }
+.msg-media { max-width:220px; border-radius:10px; display:block; margin-bottom:4px; }
+.msg-media video,.msg-media audio { max-width:100%; border-radius:8px; }
+.msg-file-chip {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(0,0,0,0.2); border-radius:8px; padding:8px 10px;
+  font-size:12px; color:inherit;
+}
+
+/* Input */
+.chat-input-zone {
+  padding:14px 16px;
+  border-top:1px solid var(--ink4);
+  background:var(--ink2);
+  flex-shrink:0;
+}
+.input-row { display:flex; align-items:flex-end; gap:8px; }
+.input-box {
+  flex:1; display:flex; align-items:flex-end; gap:8px;
+  background:var(--ink3);
+  border:1.5px solid var(--ink4);
+  border-radius:16px;
+  padding:10px 12px;
+  transition:.2s;
+}
+.input-box:focus-within { border-color:var(--lime); }
+.msg-textarea {
+  flex:1; background:none; border:none; outline:none;
+  color:var(--snow); font-family:'Outfit',sans-serif;
+  font-size:14px; resize:none; max-height:100px;
+  min-height:20px; line-height:1.4;
+}
+.msg-textarea::placeholder { color:var(--muted); }
+
+.attach-btn2 {
+  width:32px;height:32px;
+  border:none; background:transparent;
+  color:var(--muted); font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:8px; transition:.15s; flex-shrink:0;
+}
+.attach-btn2:hover { color:var(--lime); background:var(--ink4); }
+.send-btn {
+  width:44px;height:44px;
+  border-radius:13px; border:none;
+  background:var(--lime);
+  color:var(--ink);
+  font-size:18px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .2s;
+  box-shadow:0 4px 16px rgba(200,241,53,0.3);
+}
+.send-btn:hover { background:var(--lime2); transform:scale(1.05); box-shadow:0 8px 24px rgba(200,241,53,0.4); }
+.send-btn:active { transform:scale(0.97); }
+
+.attach-preview-bar {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px;
+  background:var(--ink4);
+  border-radius:var(--r-sm);
+  font-size:12px; color:var(--muted2);
+  margin-bottom:8px;
+}
+.attach-preview-bar .rm { margin-left:auto; color:var(--danger); font-size:16px; }
+
+.join-banner {
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  padding:16px; background:var(--ink2); border-top:1px solid var(--ink4);
+}
+.join-banner p { font-size:13px; color:var(--muted2); }
+
+/* Emoji picker */
+.emoji-grid {
+  position:absolute; bottom:calc(100% + 8px); left:0;
+  background:var(--ink2);
+  border:1px solid var(--ink4);
+  border-radius:var(--r);
+  padding:10px;
+  display:grid; grid-template-columns:repeat(8,34px);
+  gap:2px; z-index:50;
+  box-shadow:var(--shadow);
+}
+.emoji-grid span {
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px; border-radius:8px; transition:.1s;
+}
+.emoji-grid span:hover { background:var(--ink4); }
+.emoji-wrap { position:relative; }
+
+/* ══════════════════════════════════════════════
+   PROFILE PANEL
+   ══════════════════════════════════════════════ */
+.profile-panel {
+  flex:1; overflow-y:auto;
+  display:flex; flex-direction:column; align-items:center;
+  padding:48px 24px;
+}
+
+.profile-av-lg {
+  width:96px; height:96px;
+  border-radius:26px;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--ink);
+  margin-bottom:14px;
+  position:relative; overflow:hidden;
+  border:3px solid var(--ink5);
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+}
+.profile-av-lg img { width:100%;height:100%;object-fit:cover; }
+.profile-av-lg .av-edit {
+  position:absolute; inset:0;
+  background:rgba(8,8,16,0.65);
+  display:none; align-items:center; justify-content:center;
+  font-size:22px;
+}
+.profile-av-lg:hover .av-edit { display:flex; }
+
+.profile-name-big { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px; }
+.profile-id-tag { font-size:12px; color:var(--muted); font-family:monospace; letter-spacing:2px; margin-bottom:4px; }
+.admin-badge {
+  display:inline-block;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  color:var(--ink);
+  font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+  padding:3px 10px; border-radius:99px; margin-bottom:24px;
+}
+.user-badge {
+  display:inline-block;
+  background:var(--ink4); border:1px solid var(--ink5);
+  color:var(--muted2);
+  font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:3px 10px; border-radius:99px; margin-bottom:24px;
+}
+
+.profile-form { width:100%; max-width:340px; }
+
+.logout-btn {
+  margin-top:28px;
+  padding:11px 28px;
+  background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.2);
+  border-radius:var(--r-sm);
+  color:var(--danger);
+  font-family:'Outfit',sans-serif; font-size:13px; font-weight:600;
+  transition:.2s;
+}
+.logout-btn:hover { background:rgba(239,68,68,0.15); }
+
+/* ══════════════════════════════════════════════
+   ADMIN PANEL
+   ══════════════════════════════════════════════ */
+.admin-panel { flex:1; overflow-y:auto; padding:28px 28px 48px; }
+.admin-hero {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:48px; letter-spacing:2px; line-height:1;
+  background:linear-gradient(135deg,var(--lime),var(--coral));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:4px;
+}
+.admin-sub { font-size:13px; color:var(--muted2); margin-bottom:24px; }
+
+.tab-row {
+  display:flex; gap:4px;
+  background:var(--ink3); padding:4px; border-radius:14px;
+  margin-bottom:28px; width:fit-content;
+}
+.tab-btn {
+  padding:9px 20px; border:none; background:transparent;
+  color:var(--muted2); font-family:'Outfit',sans-serif;
+  font-size:13px; font-weight:600; border-radius:11px;
+  transition:.2s;
+}
+.tab-btn.active { background:var(--ink2); color:var(--snow); box-shadow:0 2px 8px rgba(0,0,0,0.4); }
+
+/* Admin cards */
+.admin-cards {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;
+  margin-bottom:28px;
+}
+.admin-card {
+  background:var(--ink2);
+  border:1px solid var(--ink4);
+  border-radius:var(--r);
+  padding:20px;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.admin-card::before {
+  content:'';
+  position:absolute; top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--lime),var(--coral));
+  opacity:0;
+  transition:.2s;
+}
+.admin-card:hover { border-color:var(--ink5); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+.admin-card:hover::before { opacity:1; }
+.card-ico { font-size:28px; margin-bottom:10px; }
+.card-title { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:0.5px; margin-bottom:3px; }
+.card-desc { font-size:12px; color:var(--muted2); }
+
+/* Data tables */
+.data-section { margin-top:8px; }
+.data-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px; letter-spacing:1px;
+  margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.data-count { font-size:13px; color:var(--muted2); font-family:'Outfit',sans-serif; font-weight:400; }
+
+.members-grid { display:flex; flex-direction:column; gap:8px; }
+.member-row {
+  display:flex; align-items:center; gap:12px;
+  background:var(--ink2); border:1px solid var(--ink4);
+  border-radius:var(--r-sm); padding:12px 14px;
+  transition:.15s;
+}
+.member-row:hover { border-color:var(--ink5); background:var(--ink3); }
+.mr-av {
+  width:36px;height:36px;border-radius:11px;
+  background:var(--ink4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;
+  overflow:hidden; flex-shrink:0;
+}
+.mr-av img { width:100%;height:100%;object-fit:cover; }
+.mr-info { flex:1;min-width:0; }
+.mr-name { font-size:14px; font-weight:600; }
+.mr-id { font-size:11px; color:var(--muted); font-family:monospace; }
+.mr-status { font-size:11px; padding:3px 8px; border-radius:99px; font-weight:700; }
+.status-active { background:rgba(34,197,94,0.12); color:var(--success); }
+.status-blocked { background:rgba(239,68,68,0.12); color:var(--danger); }
+.mr-actions { display:flex; gap:6px; }
+.a-btn {
+  padding:5px 10px; border:none; border-radius:7px;
+  font-size:11px; font-weight:700; transition:.15s;
+}
+.a-block { background:rgba(245,158,11,0.12); color:var(--warn); }
+.a-unblock { background:rgba(34,197,94,0.12); color:var(--success); }
+.a-del { background:rgba(239,68,68,0.12); color:var(--danger); }
+.a-edit { background:rgba(56,189,248,0.12); color:var(--sky); }
+
+.comm-admin-row {
+  display:flex; align-items:center; gap:12px;
+  background:var(--ink2); border:1px solid var(--ink4);
+  border-radius:var(--r-sm); padding:14px; margin-bottom:8px; transition:.15s;
+}
+.comm-admin-row:hover { border-color:var(--ink5); }
+.car-av {
+  width:44px;height:44px;border-radius:13px;
+  background:var(--ink4);display:flex;align-items:center;justify-content:center;
+  font-size:20px;overflow:hidden;border:1px solid var(--ink5);
+}
+.car-av img { width:100%;height:100%;object-fit:cover; }
+
+/* ══════════════════════════════════════════════
+   TOAST SYSTEM
+   ══════════════════════════════════════════════ */
+.toast-shelf {
+  position:fixed; top:20px; right:20px; z-index:9000;
+  display:flex; flex-direction:column; gap:8px; pointer-events:none;
+}
+.toast {
+  background:var(--ink2);
+  border:1px solid var(--ink4);
+  border-radius:var(--r-sm);
+  padding:12px 16px;
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; max-width:300px;
+  box-shadow:var(--shadow);
+  pointer-events:all;
+  animation:toastSlide .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes toastSlide { from{transform:translateX(120%);opacity:0} to{transform:translateX(0);opacity:1} }
+.toast.success { border-left:3px solid var(--success); }
+.toast.error   { border-left:3px solid var(--danger); }
+.toast.info    { border-left:3px solid var(--lime); }
+.toast.warn    { border-left:3px solid var(--gold); }
+
+/* ── Typing indicator ── */
+.typing-row { display:flex; align-items:center; gap:8px; padding:4px 0; }
+.typing-dots { display:flex; gap:3px; }
+.typing-dots i { width:5px;height:5px;background:var(--muted);border-radius:50%;animation:td 1.2s infinite; display:block; }
+.typing-dots i:nth-child(2){animation-delay:.2s}
+.typing-dots i:nth-child(3){animation-delay:.4s}
+@keyframes td { 0%,60%,100%{transform:translateY(0);opacity:.5} 30%{transform:translateY(-4px);opacity:1} }
+
+/* ── Setup banner ── */
+.setup-banner {
+  background:linear-gradient(135deg,rgba(200,241,53,0.1),rgba(255,107,107,0.1));
+  border:1px solid rgba(200,241,53,0.2);
+  border-radius:var(--r);
+  padding:16px 20px;
+  font-size:13px;
+  line-height:1.7;
+  margin-bottom:20px;
+  display:none;
+}
+.setup-banner.visible { display:block; }
+.setup-banner strong { color:var(--lime); }
+
+/* ── Responsive ── */
+@media(max-width:640px) {
+  .comm-list-panel { width:220px; }
+  .msg-bubble { max-width:78%; }
+  .admin-cards { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:480px) {
+  .comm-list-panel { width:180px; }
+  .sidebar { width:56px; }
+  .nav-item { width:38px;height:38px; }
+}
+
+/* ── Misc utils ── */
+.hidden { display:none !important; }
+.flex { display:flex; }
+.gap-8 { gap:8px; }
+.mt-12 { margin-top:12px; }
+.mt-16 { margin-top:16px; }
+.w-full { width:100%; }
+.text-muted { color:var(--muted2); font-size:13px; }
+.media-preview { max-width:160px;max-height:100px;border-radius:8px;object-fit:cover; }
+
+select.inp option { background:var(--ink2); }
+
+/* Spinning loader */
+.loader { width:20px;height:20px;border:2px solid var(--ink5);border-top-color:var(--lime);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto; }
+@keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     LANDING SCREEN
+     ════════════════════════════════════════════ -->
+<div class="screen active" id="screen-landing">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="land-grid"></div>
+
+  <div class="land-center">
+    <div class="land-wordmark">GenMet</div>
+    <p class="land-tagline">Where Communities Breathe</p>
+    <p class="land-credit">Made with 💓 by <a href="https://instagram.com/arman.site" target="_blank" rel="noopener">@arman.site</a></p>
+
+    <div class="land-btns">
+      <button class="cta-btn cta-join" onclick="openOverlay('overlay-signup')">✦ Join GenMet</button>
+      <div class="land-divider">already a member?</div>
+      <button class="cta-btn cta-login" onclick="openOverlay('overlay-login')">Sign In</button>
+      <button class="cta-btn cta-admin" onclick="openOverlay('overlay-admin')">⚙ Admin Access</button>
+    </div>
+  </div>
+
+  <div class="user-counter">
+    <span class="counter-dot"></span>
+    <span>Registered Members: <span class="counter-num" id="landUserCount">1</span></span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     MAIN APP SCREEN
+     ════════════════════════════════════════════ -->
+<div class="screen" id="screen-app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">GM</div>
+    <button class="nav-item active" id="nav-chat" onclick="switchPanel('chat')" title="Communities">💬</button>
+    <button class="nav-item" id="nav-profile" onclick="switchPanel('profile')" title="Profile">👤</button>
+    <button class="nav-item hidden" id="nav-admin" onclick="switchPanel('admin')" title="Admin Panel">⚙️</button>
+    <div class="sidebar-spacer"></div>
+    <div class="user-av-mini" id="sidebarAv" onclick="switchPanel('profile')" title="My Profile"></div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="panel active" id="panel-chat">
+    <div class="chat-layout">
+
+      <!-- Communities list -->
+      <div class="comm-list-panel">
+        <div class="clp-header">
+          <h3>Communities</h3>
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search…" id="commSearch" oninput="filterComms(this.value)">
+          </div>
+        </div>
+        <div class="comm-scroll" id="commScroll"></div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="chat-panel" id="chatPanel">
+        <div class="chat-empty" id="chatEmpty">
+          <div class="ce-icon">💬</div>
+          <p>Pick a community to start vibing</p>
+        </div>
+
+        <div class="hidden" id="chatActive" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+          <div class="chat-header">
+            <div class="ch-av" id="chAv"></div>
+            <div class="ch-info">
+              <div class="ch-name" id="chName"></div>
+              <div class="ch-members" id="chMembers"></div>
+            </div>
+            <div class="ch-actions">
+              <button class="icon-btn" onclick="leaveComm()" title="Leave community" id="leaveBtn">🚪</button>
+            </div>
+          </div>
+
+          <div class="messages-wrap" id="messagesWrap"></div>
+
+          <!-- Join banner (for non-members) -->
+          <div class="join-banner hidden" id="joinBanner">
+            <p>Join to start chatting</p>
+            <button class="btn btn-lime" style="width:auto;padding:10px 20px;font-size:13px" onclick="joinCurrentComm()">Join Community</button>
+          </div>
+
+          <!-- Message input (for members) -->
+          <div class="chat-input-zone hidden" id="chatInputZone">
+            <div class="attach-preview-bar hidden" id="attachBar">
+              <span id="attachName"></span>
+              <span class="rm" onclick="clearAttach()">✕</span>
+            </div>
+            <div class="input-row">
+              <div class="emoji-wrap">
+                <button class="attach-btn2" onclick="toggleEmoji()" title="Emoji">😊</button>
+                <div class="emoji-grid hidden" id="emojiGrid"></div>
+              </div>
+              <label class="attach-btn2" title="Attach file">
+                📎
+                <input type="file" id="fileInput" class="hidden" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip" onchange="onFileSelect(event)">
+              </label>
+              <div class="input-box">
+                <textarea class="msg-textarea" id="msgInput" placeholder="Message…" rows="1"
+                  onkeydown="onMsgKeydown(event)" oninput="autoResize(this)"></textarea>
+              </div>
+              <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROFILE PANEL -->
+  <div class="panel" id="panel-profile">
+    <div class="profile-panel">
+      <div class="profile-av-lg" id="profileAvLg" onclick="document.getElementById('avatarPicker').click()">
+        <div class="av-edit">✏️</div>
+      </div>
+      <input type="file" id="avatarPicker" class="hidden" accept="image/*" onchange="changeAvatar(event)">
+
+      <div class="profile-name-big" id="profNameBig"></div>
+      <div class="profile-id-tag" id="profIdTag"></div>
+      <div id="profBadge"></div>
+
+      <div class="profile-form">
+        <div class="field-group">
+          <div class="field-label">Display Name</div>
+          <input class="inp" id="profNameInp" placeholder="Your name" oninput="markProfileDirty()">
+        </div>
+        <div class="field-group">
+          <div class="field-label">About</div>
+          <textarea class="inp" id="profAboutInp" placeholder="Say something about yourself…" rows="3" oninput="markProfileDirty()"></textarea>
+        </div>
+        <button class="btn btn-lime hidden" id="saveProfileBtn" onclick="saveProfile()">Save Changes</button>
+      </div>
+
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="panel" id="panel-admin">
+    <div class="admin-panel">
+      <div class="admin-hero">Admin Panel</div>
+      <div class="admin-sub">Full control over GenMet — members, communities, messages</div>
+
+      <!-- Firebase setup banner -->
+      <div class="setup-banner" id="setupBanner">
+        ⚠️ <strong>Firebase not configured.</strong> Data is stored locally only (no real-time sync). Edit <code>firebase-config.js</code> with your Firebase project details to enable real-time sync across all devices. See the README for setup instructions.
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchAdminTab('control',this)">⚙ Control</button>
+        <button class="tab-btn" onclick="switchAdminTab('chat',this)">💬 Chat</button>
+      </div>
+
+      <!-- Control tab -->
+      <div id="adminControlTab">
+        <div class="admin-cards">
+          <div class="admin-card" onclick="adminSection('members')">
+            <div class="card-ico">👥</div>
+            <div class="card-title">All Members</div>
+            <div class="card-desc">View, block, delete members</div>
+          </div>
+          <div class="admin-card" onclick="adminSection('communities')">
+            <div class="card-ico">🏘️</div>
+            <div class="card-title">Communities</div>
+            <div class="card-desc">Add, edit, delete communities</div>
+          </div>
+          <div class="admin-card" onclick="adminSection('broadcast')">
+            <div class="card-ico">📡</div>
+            <div class="card-title">Broadcast</div>
+            <div class="card-desc">Message members or communities</div>
+          </div>
+          <div class="admin-card" id="addAdminCard" onclick="openOverlay('overlay-addAdmin')">
+            <div class="card-ico">🛡️</div>
+            <div class="card-title">Add Admin</div>
+            <div class="card-desc">Grant admin access by user ID</div>
+          </div>
+        </div>
+        <div id="adminSectionContent"></div>
+      </div>
+
+      <!-- Admin chat tab -->
+      <div id="adminChatTab" class="hidden">
+        <div class="chat-layout" style="height:calc(100vh - 220px);border-radius:var(--r);overflow:hidden;border:1px solid var(--ink4)">
+          <div class="comm-list-panel" style="border-radius:0">
+            <div class="clp-header"><h3>Communities</h3></div>
+            <div class="comm-scroll" id="adminCommScroll"></div>
+          </div>
+          <div class="chat-panel" id="adminChatPanel">
+            <div class="chat-empty" id="adminChatEmpty">
+              <div class="ce-icon">💬</div>
+              <p>Select a community to chat as Admin</p>
+            </div>
+            <div class="hidden" id="adminChatActive" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+              <div class="chat-header">
+                <div class="ch-av" id="adminChAv"></div>
+                <div class="ch-info">
+                  <div class="ch-name" id="adminChName"></div>
+                  <div class="ch-members" id="adminChMembers"></div>
+                </div>
+              </div>
+              <div class="messages-wrap" id="adminMsgsWrap"></div>
+              <div class="chat-input-zone">
+                <div class="input-row">
+                  <div class="input-box">
+                    <textarea class="msg-textarea" id="adminMsgInput" placeholder="Message as Admin…" rows="1"
+                      onkeydown="onAdminMsgKeydown(event)" oninput="autoResize(this)"></textarea>
+                  </div>
+                  <button class="send-btn" onclick="sendAdminMessage()">➤</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     OVERLAYS / MODALS
+     ════════════════════════════════════════════ -->
+
+<!-- SIGN UP -->
+<div class="overlay" id="overlay-signup">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-signup')">✕</button>
+    <div id="signup-step1">
+      <div class="modal-title">Join GenMet</div>
+      <div class="modal-sub">Create your account — takes 30 seconds</div>
+
+      <div class="avatar-upload" id="signupAvPreview">
+        <span>📷</span>
+        <div class="av-hint">Photo</div>
+        <input type="file" accept="image/*" id="signupAvFile" onchange="previewSignupAv(event)">
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Your Name</div>
+        <input class="inp" id="suName" placeholder="What should we call you?">
+      </div>
+      <div class="field-group">
+        <div class="field-label">About (optional)</div>
+        <input class="inp" id="suAbout" placeholder="Something about you…">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Password</div>
+        <input class="inp" type="password" id="suPass" placeholder="Create a strong password">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Confirm Password</div>
+        <input class="inp" type="password" id="suPass2" placeholder="Repeat your password">
+      </div>
+
+      <button class="btn btn-lime mt-12" onclick="doSignup()">Create My Account →</button>
+      <div class="text-muted mt-12" style="text-align:center">Already have an account? <span style="color:var(--lime);cursor:pointer" onclick="closeOverlay('overlay-signup');openOverlay('overlay-login')">Sign In</span></div>
+    </div>
+
+    <!-- Credential reveal -->
+    <div id="signup-step2" class="hidden">
+      <div class="modal-title">You're In! 🎉</div>
+      <div class="modal-sub">Save these credentials — you'll need them to sign in on any device</div>
+      <div class="cred-box">
+        <div class="cred-label">Your GenMet Credentials</div>
+        <div class="cred-row"><span class="cred-key">User ID</span><span class="cred-val" id="revealId"></span></div>
+        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val" id="revealPass" style="font-size:16px;font-family:monospace;letter-spacing:1px"></span></div>
+      </div>
+      <div class="cred-warn">
+        <strong>⚠ IMPORTANT NOTE</strong>
+        Take a screenshot or save your User ID and password somewhere safe. You cannot sign in later if you forget them — there is no password recovery.
+      </div>
+      <button class="btn btn-lime mt-16" onclick="enterApp()">Let's Go →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGN IN -->
+<div class="overlay" id="overlay-login">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-login')">✕</button>
+    <div class="modal-title">Welcome Back</div>
+    <div class="modal-sub">Sign in with your GenMet credentials</div>
+    <div class="field-group">
+      <div class="field-label">User ID</div>
+      <input class="inp" id="liId" placeholder="e.g. G84729" style="text-transform:uppercase">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Password</div>
+      <input class="inp" type="password" id="liPass" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-lime mt-12" onclick="doLogin()">Sign In →</button>
+    <div class="text-muted mt-12" style="text-align:center">New here? <span style="color:var(--lime);cursor:pointer" onclick="closeOverlay('overlay-login');openOverlay('overlay-signup')">Join GenMet</span></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="overlay" id="overlay-admin">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-admin')">✕</button>
+    <div class="modal-title">Admin Access</div>
+    <div class="modal-sub">Enter admin credentials to access the control panel</div>
+    <div class="field-group">
+      <div class="field-label">Admin ID</div>
+      <input class="inp" id="adId" placeholder="Admin user ID">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Password</div>
+      <input class="inp" type="password" id="adPass" placeholder="Admin password" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    </div>
+    <button class="btn btn-coral mt-12" onclick="doAdminLogin()">Enter Admin Panel →</button>
+  </div>
+</div>
+
+<!-- ADD COMMUNITY -->
+<div class="overlay" id="overlay-addComm">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-addComm')">✕</button>
+    <div class="modal-title">New Community</div>
+    <div class="modal-sub">Create a space for people to connect</div>
+    <div class="avatar-upload" id="addCommAvPreview">
+      <span>🏘️</span>
+      <input type="file" accept="image/*" id="addCommAvFile" onchange="previewCommAv(event,'addCommAvPreview')">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Community Name</div>
+      <input class="inp" id="newCommName" placeholder="e.g. Photography Lovers">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Emoji Icon</div>
+      <input class="inp" id="newCommEmoji" placeholder="Single emoji, e.g. 📸" maxlength="4" style="font-size:24px;text-align:center">
+    </div>
+    <button class="btn btn-lime mt-12" onclick="doAddCommunity()">Create Community</button>
+  </div>
+</div>
+
+<!-- EDIT COMMUNITY -->
+<div class="overlay" id="overlay-editComm">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-editComm')">✕</button>
+    <div class="modal-title">Edit Community</div>
+    <div class="modal-sub">Update community details</div>
+    <div class="avatar-upload" id="editCommAvPreview">
+      <input type="file" accept="image/*" id="editCommAvFile" onchange="previewCommAv(event,'editCommAvPreview')">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Community Name</div>
+      <input class="inp" id="editCommName">
+    </div>
+    <div class="field-group">
+      <div class="field-label">Emoji Icon</div>
+      <input class="inp" id="editCommEmoji" maxlength="4" style="font-size:24px;text-align:center">
+    </div>
+    <input type="hidden" id="editCommId">
+    <button class="btn btn-lime mt-12" onclick="doEditCommunity()">Save Changes</button>
+  </div>
+</div>
+
+<!-- BROADCAST -->
+<div class="overlay" id="overlay-broadcast">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-broadcast')">✕</button>
+    <div class="modal-title">Broadcast Message</div>
+    <div class="modal-sub">Send a message from admin to members or communities</div>
+    <div class="field-group">
+      <div class="field-label">Send To</div>
+      <select class="inp" id="bcType" onchange="updateBcTarget()">
+        <option value="community">Specific Community</option>
+        <option value="allComms">All Communities</option>
+        <option value="member">Specific Member</option>
+      </select>
+    </div>
+    <div class="field-group" id="bcTargetGroup">
+      <div class="field-label">Target</div>
+      <select class="inp" id="bcTarget"></select>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Message</div>
+      <textarea class="inp" id="bcMsg" rows="4" placeholder="Type your message…"></textarea>
+    </div>
+    <button class="btn btn-lime mt-12" onclick="doBroadcast()">Send Broadcast 📡</button>
+  </div>
+</div>
+
+<!-- ADD ADMIN -->
+<div class="overlay" id="overlay-addAdmin">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('overlay-addAdmin')">✕</button>
+    <div class="modal-title">Add Admin</div>
+    <div class="modal-sub">Grant admin privileges to an existing user by their GenMet ID</div>
+    <div class="field-group">
+      <div class="field-label">GenMet User ID</div>
+      <input class="inp" id="newAdminId" placeholder="e.g. G84729" style="text-transform:uppercase">
+    </div>
+    <button class="btn btn-lime mt-12" onclick="doAddAdmin()">Grant Admin Access</button>
+  </div>
+</div>
+
+<!-- TOAST SHELF -->
+<div class="toast-shelf" id="toastShelf"></div>
+
+<!-- FIREBASE + CONFIG -->
+<script src="firebase-config.js"></script>
+<script type="module">
+// ════════════════════════════════════════════════════════════
+//  GENMET — CORE APPLICATION
+//  Architecture: Firebase RTDB for real-time + localStorage fallback
+// ════════════════════════════════════════════════════════════
+
+// ─── Firebase setup ──────────────────────────────────────────
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, get, push, onValue, off, update, remove, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getStorage, ref as sRef, uploadString, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+let db = null;
+let storage = null;
+let firebaseOk = false;
+
+try {
+  if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== 'YOUR_API_KEY') {
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getDatabase(app);
+    storage = getStorage(app);
+    firebaseOk = true;
+    console.log('✅ Firebase connected');
+  }
+} catch(e) {
+  console.warn('Firebase init failed:', e);
+}
+
+// ─── LocalStorage helpers (fallback + cache) ──────────────────
+const lsGet = (k, d=null) => { try { return JSON.parse(localStorage.getItem('gm_'+k)) ?? d; } catch { return d; } };
+const lsSet = (k, v) => localStorage.setItem('gm_'+k, JSON.stringify(v));
+
+// ─── DB abstraction ───────────────────────────────────────────
+async function dbSet(path, val) {
+  if (firebaseOk) await set(ref(db, path), val);
+  else lsSet(path.replace(/\//g,'_'), val);
+}
+async function dbUpdate(path, val) {
+  if (firebaseOk) await update(ref(db, path), val);
+  else {
+    const k = path.replace(/\//g,'_');
+    lsSet(k, { ...lsGet(k, {}), ...val });
+  }
+}
+async function dbGet(path) {
+  if (firebaseOk) {
+    const snap = await get(ref(db, path));
+    return snap.exists() ? snap.val() : null;
+  }
+  return lsGet(path.replace(/\//g,'_'), null);
+}
+async function dbPush(path, val) {
+  if (firebaseOk) {
+    const r = push(ref(db, path), { ...val, ts: serverTimestamp() });
+    return r.key;
+  } else {
+    const k = path.replace(/\//g,'_');
+    const arr = lsGet(k, []);
+    const id = 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    arr.push({ ...val, ts: Date.now(), id });
+    lsSet(k, arr);
+    return id;
+  }
+}
+function dbListen(path, cb) {
+  if (firebaseOk) {
+    onValue(ref(db, path), snap => cb(snap.exists() ? snap.val() : null));
+  } else {
+    // Poll fallback
+    let last = null;
+    const interval = setInterval(() => {
+      const v = lsGet(path.replace(/\//g,'_'), null);
+      const s = JSON.stringify(v);
+      if (s !== last) { last = s; cb(v); }
+    }, 1000);
+    return () => clearInterval(interval);
+  }
+}
+async function dbRemove(path) {
+  if (firebaseOk) await remove(ref(db, path));
+  else lsSet(path.replace(/\//g,'_'), null);
+}
+
+// ─── Image upload ─────────────────────────────────────────────
+async function uploadImage(dataUrl, path) {
+  if (!dataUrl) return null;
+  if (firebaseOk && storage) {
+    try {
+      const storageRef = sRef(storage, path);
+      await uploadString(storageRef, dataUrl, 'data_url');
+      return await getDownloadURL(storageRef);
+    } catch(e) { /* fallback to dataUrl */ }
+  }
+  return dataUrl; // store inline if no storage
+}
+
+// ─── STATE ────────────────────────────────────────────────────
+let currentUser = null;
+let isAdmin = false;
+let isPrimaryAdmin = false;
+let currentCommId = null;
+let adminCurrentCommId = null;
+let attachedData = null;
+let attachedMeta = null;
+let msgListeners = {};
+
+// ─── ID GENERATOR ─────────────────────────────────────────────
+function genUserId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id = 'G';
+  for (let i=0; i<5; i++) id += chars[Math.floor(Math.random()*chars.length)];
+  return id;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+async function init() {
+  // Show setup banner if Firebase not configured
+  if (!firebaseOk) {
+    const banner = document.getElementById('setupBanner');
+    if (banner) banner.classList.add('visible');
+  }
+
+  // Seed default communities if first run
+  const comms = await dbGet('communities');
+  if (!comms) {
+    const defaults = {};
+    (typeof DEFAULT_COMMUNITIES !== 'undefined' ? DEFAULT_COMMUNITIES : [
+      { name:'General', emoji:'💬' },
+      { name:'Tech Talk', emoji:'💻' },
+      { name:'Music Vibes', emoji:'🎵' },
+    ]).forEach(c => {
+      const id = 'comm_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+      defaults[id] = { id, name:c.name, emoji:c.emoji, avatar:null, createdAt:Date.now() };
+    });
+    await dbSet('communities', defaults);
+  }
+
+  // Ensure primary admin exists
+  const adminId = typeof ADMIN_ID !== 'undefined' ? ADMIN_ID : 'P13843';
+  const adminPw = typeof ADMIN_PASSWORD !== 'undefined' ? ADMIN_PASSWORD : 'arman.site';
+  const existingAdmin = await dbGet('users/' + adminId);
+  if (!existingAdmin) {
+    await dbSet('users/' + adminId, {
+      id: adminId,
+      name: 'admin',
+      about: 'GenMet Administrator',
+      avatar: null,
+      isAdmin: true,
+      isPrimaryAdmin: true,
+      password: adminPw,
+      joinedAt: Date.now(),
+      blocked: false,
+    });
+  }
+
+  // Listen for user count on landing
+  dbListen('users', users => {
+    const count = users ? Object.keys(users).length : 1;
+    const el = document.getElementById('landUserCount');
+    if (el) el.textContent = count;
+  });
+
+  // Build emoji grid
+  const emojis = ['😀','😂','😍','🥰','😎','🤔','😅','🙌','👏','🔥','💯','❤️','✨','🎉','👍','🤣','💪','🙏','😊','🤗','😒','👀','💀','🥳','😩','🤩','🚀','⭐','🌟','💥','🎯','✅','❌','💡','🏆','🎊','💎','🌈','⚡','🎮'];
+  const grid = document.getElementById('emojiGrid');
+  if (grid) grid.innerHTML = emojis.map(e => `<span onclick="insertEmoji('${e}')">${e}</span>`).join('');
+}
+
+// ─── SIGN UP ──────────────────────────────────────────────────
+window.doSignup = async function() {
+  const name = document.getElementById('suName').value.trim();
+  const about = document.getElementById('suAbout').value.trim();
+  const pass = document.getElementById('suPass').value;
+  const pass2 = document.getElementById('suPass2').value;
+
+  if (!name) { toast('Please enter your name','error'); return; }
+  if (/admin/i.test(name)) { toast('You cannot use "admin" as your name','error'); return; }
+  if (pass.length < 4) { toast('Password must be at least 4 characters','error'); return; }
+  if (pass !== pass2) { toast('Passwords do not match','error'); return; }
+
+  const userId = genUserId();
+  // Ensure unique
+  const existing = await dbGet('users/' + userId);
+  if (existing) { toast('Try again — ID collision','warn'); return; }
+
+  // Upload avatar
+  const avFileInput = document.getElementById('signupAvFile');
+  let avatarUrl = null;
+  if (avFileInput.files[0]) {
+    const dr = await readFileAsDataUrl(avFileInput.files[0]);
+    avatarUrl = await uploadImage(dr, `avatars/${userId}`);
+  }
+
+  const user = { id:userId, name, about, avatar:avatarUrl, isAdmin:false, isPrimaryAdmin:false, password:pass, joinedAt:Date.now(), blocked:false };
+  await dbSet('users/' + userId, user);
+
+  currentUser = user;
+  isAdmin = false; isPrimaryAdmin = false;
+
+  document.getElementById('revealId').textContent = userId;
+  document.getElementById('revealPass').textContent = pass;
+  document.getElementById('signup-step1').classList.add('hidden');
+  document.getElementById('signup-step2').classList.remove('hidden');
+};
+
+// ─── LOGIN ────────────────────────────────────────────────────
+window.doLogin = async function() {
+  const id = document.getElementById('liId').value.trim().toUpperCase();
+  const pass = document.getElementById('liPass').value;
+  if (!id || !pass) { toast('Fill in both fields','error'); return; }
+
+  const user = await dbGet('users/' + id);
+  if (!user) { toast('User ID not found','error'); return; }
+  if (user.blocked) { toast('Your account has been blocked','error'); return; }
+  if (user.password !== pass) { toast('Incorrect password','error'); return; }
+
+  currentUser = user;
+  isAdmin = user.isAdmin || false;
+  isPrimaryAdmin = user.isPrimaryAdmin || false;
+  closeOverlay('overlay-login');
+  enterApp();
+};
+
+// ─── ADMIN LOGIN ──────────────────────────────────────────────
+window.doAdminLogin = async function() {
+  const id = document.getElementById('adId').value.trim();
+  const pass = document.getElementById('adPass').value;
+  const adminId = typeof ADMIN_ID !== 'undefined' ? ADMIN_ID : 'P13843';
+  const adminPw = typeof ADMIN_PASSWORD !== 'undefined' ? ADMIN_PASSWORD : 'arman.site';
+
+  // Check hardcoded primary admin
+  if (id === adminId && pass === adminPw) {
+    const user = await dbGet('users/' + adminId);
+    currentUser = user || { id:adminId, name:'admin', about:'', avatar:null, isAdmin:true, isPrimaryAdmin:true };
+    isAdmin = true; isPrimaryAdmin = true;
+    closeOverlay('overlay-admin');
+    enterApp();
+    return;
+  }
+
+  // Check other admins
+  const user = await dbGet('users/' + id);
+  if (!user) { toast('Admin ID not found','error'); return; }
+  if (!user.isAdmin) { toast('This account does not have admin privileges','error'); return; }
+  if (user.password !== pass) { toast('Incorrect password','error'); return; }
+
+  currentUser = user;
+  isAdmin = true;
+  isPrimaryAdmin = user.isPrimaryAdmin || false;
+  closeOverlay('overlay-admin');
+  enterApp();
+};
+
+// ─── ENTER APP ────────────────────────────────────────────────
+window.enterApp = function() {
+  document.getElementById('screen-landing').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+
+  if (isAdmin) {
+    document.getElementById('nav-admin').classList.remove('hidden');
+    if (!isPrimaryAdmin) document.getElementById('addAdminCard').classList.add('hidden');
+  }
+
+  updateSidebarAv();
+  loadProfilePanel();
+  renderCommList();
+  toast(`Welcome${currentUser.name !== 'admin' ? ', ' + currentUser.name : ' back, Admin'}! 🎉`, 'success');
+};
+
+// ─── LOGOUT ───────────────────────────────────────────────────
+window.logout = function() {
+  // Clean up listeners
+  Object.values(msgListeners).forEach(unsub => typeof unsub === 'function' && unsub());
+  msgListeners = {};
+  currentUser = null; isAdmin = false; isPrimaryAdmin = false;
+  currentCommId = null; adminCurrentCommId = null;
+
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-landing').classList.add('active');
+  document.getElementById('nav-admin').classList.add('hidden');
+  switchPanel('chat');
+  document.getElementById('chatEmpty').style.display = '';
+  document.getElementById('chatActive').style.display = 'none';
+  toast('Signed out. See you soon! 👋', 'info');
+};
+
+// ─── PANELS ───────────────────────────────────────────────────
+window.switchPanel = function(name) {
+  ['chat','profile','admin'].forEach(p => {
+    document.getElementById('panel-'+p).classList.toggle('active', p===name);
+    document.getElementById('nav-'+p)?.classList.toggle('active', p===name);
+  });
+  if (name === 'profile') loadProfilePanel();
+  if (name === 'admin') { renderAdminCommList(); renderAdminSection('members'); }
+};
+
+// ─── COMMUNITY LIST ───────────────────────────────────────────
+function renderCommList(filter='') {
+  dbGet('communities').then(comms => {
+    dbGet('memberships').then(mems => {
+      const myMems = (mems && mems[currentUser?.id]) ? mems[currentUser.id] : [];
+      const el = document.getElementById('commScroll');
+      if (!comms) { el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">No communities yet</div>'; return; }
+      const f = filter.toLowerCase();
+      const items = Object.values(comms).filter(c => c.name.toLowerCase().includes(f));
+      if (!items.length) { el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">No results</div>'; return; }
+      el.innerHTML = items.map(c => {
+        const joined = myMems.includes(c.id) || isAdmin;
+        return `<div class="comm-item ${currentCommId===c.id?'active':''}" onclick="openComm('${c.id}')">
+          <div class="ci-av">${c.avatar ? `<img src="${c.avatar}">` : (c.emoji||c.name[0])}</div>
+          <div class="ci-info">
+            <div class="ci-name">${esc(c.name)}</div>
+            <div class="ci-last" id="last_${c.id}">…</div>
+          </div>
+          <div class="ci-right">
+            ${!joined ? `<span class="ci-join">Join</span>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      // Async load last messages
+      items.forEach(c => loadLastMsg(c.id));
+    });
+  });
+}
+
+function loadLastMsg(commId) {
+  dbGet('messages/' + commId).then(msgs => {
+    const el = document.getElementById('last_'+commId);
+    if (!el) return;
+    if (!msgs) { el.textContent = 'No messages yet'; return; }
+    const arr = Object.values(msgs).sort((a,b) => (a.ts||0)-(b.ts||0));
+    const last = arr[arr.length-1];
+    if (!last) return;
+    el.textContent = last.type==='text' ? (last.text||'').slice(0,35) : `[${last.type||'file'}]`;
+  });
+}
+
+window.filterComms = function(v) { renderCommList(v); };
+
+// ─── OPEN COMMUNITY ───────────────────────────────────────────
+window.openComm = async function(id) {
+  currentCommId = id;
+  renderCommList(document.getElementById('commSearch').value);
+
+  const comms = await dbGet('communities');
+  const c = comms?.[id];
+  if (!c) return;
+
+  const mems = await dbGet('memberships');
+  const myMems = (mems && mems[currentUser?.id]) ? mems[currentUser.id] : [];
+  const joined = myMems.includes(id) || isAdmin;
+
+  // Count members
+  const memberCount = mems ? Object.values(mems).filter(m => Array.isArray(m) && m.includes(id)).length : 0;
+
+  // Show chat UI
+  document.getElementById('chatEmpty').style.display = 'none';
+  const ca = document.getElementById('chatActive');
+  ca.style.display = 'flex'; ca.classList.remove('hidden');
+
+  const av = document.getElementById('chAv');
+  av.innerHTML = c.avatar ? `<img src="${c.avatar}">` : (c.emoji||c.name[0]);
+  document.getElementById('chName').textContent = c.name;
+  document.getElementById('chMembers').textContent = `${memberCount} member${memberCount!==1?'s':''}`;
+  document.getElementById('joinBanner').classList.toggle('hidden', joined);
+  document.getElementById('chatInputZone').classList.toggle('hidden', !joined);
+  document.getElementById('leaveBtn').classList.toggle('hidden', !joined || isAdmin);
+
+  // Start listening to messages
+  if (msgListeners[id]) msgListeners[id](); // remove old listener
+  msgListeners[id] = dbListen('messages/' + id, msgs => renderMessages(msgs, 'messagesWrap', false));
+};
+
+// ─── MESSAGES RENDERER ───────────────────────────────────────
+function renderMessages(msgs, containerId, isAdmin_) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  if (!msgs || !Object.keys(msgs).length) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:40px 0">No messages yet — say hello! 👋</div>';
+    return;
+  }
+  const arr = Object.values(msgs).sort((a,b) => (a.ts||0)-(b.ts||0));
+  let html = '';
+  let lastDate = null;
+
+  arr.forEach((m, i) => {
+    const d = new Date(m.ts || Date.now());
+    const dateStr = d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    if (dateStr !== lastDate) {
+      html += `<div class="date-sep">${dateStr}</div>`;
+      lastDate = dateStr;
+    }
+    const mine = m.senderId === currentUser?.id;
+    const showAv = !mine && (i===0 || arr[i-1].senderId !== m.senderId);
+    const isAdminMsg = m.isAdmin;
+    const avContent = m.senderAvatar ? `<img src="${m.senderAvatar}">` : (m.senderName||'?')[0].toUpperCase();
+
+    html += `<div class="msg-row ${mine?'mine':''}">
+      ${!mine ? `<div class="msg-av ${showAv?'':'ghost'}">${avContent}</div>` : ''}
+      <div class="msg-bubble ${mine?'mine':isAdminMsg?'admin-msg':'theirs'}">
+        ${!mine&&showAv ? `<div class="msg-sender ${isAdminMsg?'admin-sender':''}">${esc(m.senderName||'Unknown')}${isAdminMsg?' 👑':''}</div>` : ''}
+        ${renderMsgContent(m)}
+        <div class="msg-time">${d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+    </div>`;
+  });
+
+  wrap.innerHTML = html;
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function renderMsgContent(m) {
+  if (m.type === 'text') return `<div>${esc(m.text||'').replace(/\n/g,'<br>')}</div>`;
+  if (m.type === 'image') return `<img class="msg-media" src="${m.fileUrl}" onclick="viewMedia('${m.fileUrl}','image')" style="cursor:zoom-in">`;
+  if (m.type === 'video') return `<video class="msg-media" controls src="${m.fileUrl}" style="max-width:220px"></video>`;
+  if (m.type === 'audio') return `<audio controls src="${m.fileUrl}" style="max-width:220px;margin-bottom:4px"></audio>`;
+  if (m.type === 'file') return `<div class="msg-file-chip">📄 <span>${esc(m.fileName||'File')}</span></div>`;
+  return '';
+}
+
+// ─── SEND MESSAGE ─────────────────────────────────────────────
+window.sendMessage = async function() {
+  if (!currentCommId || !currentUser) return;
+  const inp = document.getElementById('msgInput');
+  const text = inp.value.trim();
+  if (!text && !attachedData) return;
+
+  const msg = {
+    senderId: currentUser.id,
+    senderName: currentUser.name,
+    senderAvatar: currentUser.avatar||null,
+    isAdmin: isAdmin,
+    ts: Date.now(),
+    type: attachedMeta ? attachedMeta.type : 'text',
+    text: text||'',
+    fileUrl: null,
+    fileName: attachedMeta?.name||null,
+  };
+
+  if (attachedData && attachedMeta) {
+    const url = await uploadImage(attachedData, `files/${currentCommId}/${Date.now()}_${attachedMeta.name}`);
+    msg.fileUrl = url;
+  }
+
+  await dbPush('messages/' + currentCommId, msg);
+  inp.value = ''; inp.style.height='auto';
+  clearAttach();
+};
+
+window.onMsgKeydown = function(e) {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+};
+
+// ─── JOIN / LEAVE ─────────────────────────────────────────────
+window.joinCurrentComm = async function() {
+  if (!currentCommId || !currentUser) return;
+  const mems = await dbGet('memberships') || {};
+  if (!mems[currentUser.id]) mems[currentUser.id] = [];
+  if (!mems[currentUser.id].includes(currentCommId)) {
+    mems[currentUser.id].push(currentCommId);
+    await dbSet('memberships', mems);
+    toast('Joined! Start chatting 🎉', 'success');
+    openComm(currentCommId);
+    renderCommList();
+  }
+};
+
+window.leaveComm = async function() {
+  if (!currentCommId || !currentUser || isAdmin) return;
+  const mems = await dbGet('memberships') || {};
+  if (mems[currentUser.id]) {
+    mems[currentUser.id] = mems[currentUser.id].filter(id => id !== currentCommId);
+    await dbSet('memberships', mems);
+    toast('Left community', 'info');
+    currentCommId = null;
+    document.getElementById('chatEmpty').style.display = '';
+    document.getElementById('chatActive').style.display = 'none';
+    renderCommList();
+  }
+};
+
+// ─── FILE HANDLING ────────────────────────────────────────────
+window.onFileSelect = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 20*1024*1024) { toast('File too large (max 20MB)','error'); return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    attachedData = ev.target.result;
+    const type = file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : file.type.startsWith('audio') ? 'audio' : 'file';
+    attachedMeta = { name:file.name, type };
+    const bar = document.getElementById('attachBar');
+    bar.classList.remove('hidden');
+    const icons = {image:'🖼️',video:'🎥',audio:'🎵',file:'📄'};
+    document.getElementById('attachName').innerHTML = `${icons[type]} ${esc(file.name)}`;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+};
+
+window.clearAttach = function() {
+  attachedData = null; attachedMeta = null;
+  document.getElementById('attachBar').classList.add('hidden');
+};
+
+// ─── EMOJI ────────────────────────────────────────────────────
+window.toggleEmoji = function() {
+  document.getElementById('emojiGrid').classList.toggle('hidden');
+};
+window.insertEmoji = function(e) {
+  const inp = document.getElementById('msgInput');
+  inp.value += e; inp.focus();
+  document.getElementById('emojiGrid').classList.add('hidden');
+};
+document.addEventListener('click', e => {
+  if (!e.target.closest('.emoji-wrap')) document.getElementById('emojiGrid')?.classList.add('hidden');
+});
+
+// ─── MEDIA VIEWER ─────────────────────────────────────────────
+window.viewMedia = function(src, type) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(8,8,16,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(10px)';
+  ov.onclick = () => ov.remove();
+  if (type==='image') {
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'max-width:92vw;max-height:92vh;border-radius:12px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.8)';
+    ov.appendChild(img);
+  }
+  document.body.appendChild(ov);
+};
+
+// ─── PROFILE ──────────────────────────────────────────────────
+function updateSidebarAv() {
+  const el = document.getElementById('sidebarAv');
+  if (!el || !currentUser) return;
+  if (currentUser.avatar) {
+    el.innerHTML = `<img src="${currentUser.avatar}">`;
+  } else {
+    el.textContent = (currentUser.name||'?')[0].toUpperCase();
+  }
+}
+
+function loadProfilePanel() {
+  if (!currentUser) return;
+  const av = document.getElementById('profileAvLg');
+  if (currentUser.avatar) av.innerHTML = `<img src="${currentUser.avatar}"><div class="av-edit">✏️</div>`;
+  else av.innerHTML = `<span>${(currentUser.name||'?')[0].toUpperCase()}</span><div class="av-edit">✏️</div>`;
+
+  document.getElementById('profNameBig').textContent = currentUser.name;
+  document.getElementById('profIdTag').textContent = 'ID: ' + currentUser.id;
+  document.getElementById('profBadge').innerHTML = isAdmin
+    ? '<div class="admin-badge">⚙ Admin</div>'
+    : '<div class="user-badge">Member</div>';
+
+  document.getElementById('profNameInp').value = currentUser.name;
+  document.getElementById('profNameInp').disabled = isAdmin; // admin name fixed
+  document.getElementById('profAboutInp').value = currentUser.about||'';
+  document.getElementById('saveProfileBtn').classList.add('hidden');
+}
+
+window.markProfileDirty = function() {
+  document.getElementById('saveProfileBtn').classList.remove('hidden');
+};
+
+window.saveProfile = async function() {
+  const name = document.getElementById('profNameInp').value.trim();
+  const about = document.getElementById('profAboutInp').value.trim();
+  if (!isAdmin) {
+    if (!name) { toast('Name cannot be empty','error'); return; }
+    if (/admin/i.test(name)) { toast('Cannot use "admin" as name','error'); return; }
+    currentUser.name = name;
+  }
+  currentUser.about = about;
+  await dbUpdate('users/' + currentUser.id, { name:currentUser.name, about:currentUser.about });
+  document.getElementById('saveProfileBtn').classList.add('hidden');
+  loadProfilePanel();
+  updateSidebarAv();
+  toast('Profile saved ✓','success');
+};
+
+window.changeAvatar = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const dr = await readFileAsDataUrl(file);
+  const url = await uploadImage(dr, `avatars/${currentUser.id}`);
+  currentUser.avatar = url;
+  await dbUpdate('users/' + currentUser.id, { avatar:url });
+  loadProfilePanel();
+  updateSidebarAv();
+  toast('Avatar updated!','success');
+  e.target.value = '';
+};
+
+// ─── ADMIN SECTION RENDERING ──────────────────────────────────
+window.switchAdminTab = function(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('adminControlTab').classList.toggle('hidden', tab!=='control');
+  document.getElementById('adminChatTab').classList.toggle('hidden', tab!=='chat');
+  if (tab==='chat') renderAdminCommList();
+};
+
+window.adminSection = function(section) {
+  switch(section) {
+    case 'members':     renderAdminSection('members'); break;
+    case 'communities': renderAdminSection('communities'); break;
+    case 'broadcast':   openOverlay('overlay-broadcast'); updateBcTarget(); break;
+  }
+};
+
+async function renderAdminSection(section) {
+  const el = document.getElementById('adminSectionContent');
+  if (!el) return;
+  el.innerHTML = '<div class="loader" style="margin-top:20px"></div>';
+
+  if (section === 'members') {
+    const users = await dbGet('users') || {};
+    const blocked = [];
+    const arr = Object.values(users);
+    let html = `<div class="data-section">
+      <div class="data-title">All Members <span class="data-count">${arr.length} total</span></div>
+      <div class="members-grid">`;
+    arr.forEach(u => {
+      const avHtml = u.avatar ? `<img src="${u.avatar}">` : (u.name||'?')[0].toUpperCase();
+      html += `<div class="member-row">
+        <div class="mr-av">${avHtml}</div>
+        <div class="mr-info">
+          <div class="mr-name">${esc(u.name)}</div>
+          <div class="mr-id">ID: ${u.id}${u.isAdmin?' 👑':''}</div>
+        </div>
+        <span class="mr-status ${u.blocked?'status-blocked':'status-active'}">${u.blocked?'Blocked':'Active'}</span>
+        <div class="mr-actions">
+          ${u.blocked
+            ? `<button class="a-btn a-unblock" onclick="adminBlockUser('${u.id}',false)">Unblock</button>`
+            : `<button class="a-btn a-block" onclick="adminBlockUser('${u.id}',true)">Block</button>`}
+          <button class="a-btn a-del" onclick="adminDeleteUser('${u.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+    el.innerHTML = html;
+  }
+
+  if (section === 'communities') {
+    const comms = await dbGet('communities') || {};
+    const msgs = await dbGet('messages') || {};
+    const arr = Object.values(comms);
+    let html = `<div class="data-section">
+      <div class="data-title">Communities <span class="data-count">${arr.length} total</span>
+        <button class="btn btn-lime" style="width:auto;padding:7px 16px;font-size:12px;margin-left:auto" onclick="openOverlay('overlay-addComm')">+ Add New</button>
+      </div>`;
+    arr.forEach(c => {
+      const msgCount = msgs[c.id] ? Object.keys(msgs[c.id]).length : 0;
+      html += `<div class="comm-admin-row">
+        <div class="car-av">${c.avatar?`<img src="${c.avatar}">`:(c.emoji||c.name[0])}</div>
+        <div style="flex:1">
+          <div style="font-weight:600">${esc(c.name)}</div>
+          <div style="font-size:12px;color:var(--muted2)">${msgCount} messages</div>
+        </div>
+        <div class="mr-actions">
+          <button class="a-btn a-edit" onclick="openEditComm('${c.id}')">Edit</button>
+          <button class="a-btn a-del" onclick="adminDeleteComm('${c.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+    el.innerHTML = html;
+  }
+}
+
+// ─── ADMIN ACTIONS ────────────────────────────────────────────
+window.adminBlockUser = async function(uid, block) {
+  if (uid === (typeof ADMIN_ID!=='undefined'?ADMIN_ID:'P13843')) { toast("Can't block primary admin",'error'); return; }
+  await dbUpdate('users/'+uid, {blocked:block});
+  toast(block?'User blocked':'User unblocked', 'info');
+  renderAdminSection('members');
+};
+
+window.adminDeleteUser = async function(uid) {
+  if (uid === (typeof ADMIN_ID!=='undefined'?ADMIN_ID:'P13843')) { toast("Can't delete primary admin",'error'); return; }
+  if (!confirm('Delete this member permanently? They will also be blocked.')) return;
+  await dbUpdate('users/'+uid, {blocked:true, deleted:true});
+  toast('Member deleted and blocked','info');
+  renderAdminSection('members');
+};
+
+window.adminDeleteComm = async function(id) {
+  if (!confirm('Delete this community and all its messages?')) return;
+  await dbRemove('communities/'+id);
+  await dbRemove('messages/'+id);
+  toast('Community deleted','info');
+  renderAdminSection('communities');
+  renderCommList();
+};
+
+// ─── COMMUNITY CRUD ───────────────────────────────────────────
+window.previewCommAv = function(e, containerId) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const el = document.getElementById(containerId);
+    el.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">
+      <input type="file" accept="image/*" id="${containerId==='addCommAvPreview'?'addCommAvFile':'editCommAvFile'}" onchange="previewCommAv(event,'${containerId}')">`;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.previewSignupAv = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const el = document.getElementById('signupAvPreview');
+    el.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:20px">
+      <input type="file" accept="image/*" id="signupAvFile" onchange="previewSignupAv(event)">`;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.doAddCommunity = async function() {
+  const name = document.getElementById('newCommName').value.trim();
+  const emoji = document.getElementById('newCommEmoji').value.trim() || '💬';
+  if (!name) { toast('Community name required','error'); return; }
+
+  const id = 'comm_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  let avatar = null;
+  const avFile = document.getElementById('addCommAvFile')?.files[0];
+  if (avFile) {
+    const dr = await readFileAsDataUrl(avFile);
+    avatar = await uploadImage(dr, `comm_avatars/${id}`);
+  }
+
+  await dbSet('communities/'+id, {id, name, emoji, avatar, createdAt:Date.now()});
+  closeOverlay('overlay-addComm');
+  toast('Community created! 🏘️','success');
+  document.getElementById('newCommName').value='';
+  document.getElementById('newCommEmoji').value='';
+  renderCommList();
+  renderAdminSection('communities');
+};
+
+window.openEditComm = async function(id) {
+  const c = await dbGet('communities/'+id);
+  if (!c) return;
+  document.getElementById('editCommId').value = id;
+  document.getElementById('editCommName').value = c.name;
+  document.getElementById('editCommEmoji').value = c.emoji||'';
+  const avEl = document.getElementById('editCommAvPreview');
+  avEl.innerHTML = `${c.avatar?`<img src="${c.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">`:'<span>🏘️</span>'}
+    <input type="file" accept="image/*" id="editCommAvFile" onchange="previewCommAv(event,'editCommAvPreview')">`;
+  openOverlay('overlay-editComm');
+};
+
+window.doEditCommunity = async function() {
+  const id = document.getElementById('editCommId').value;
+  const name = document.getElementById('editCommName').value.trim();
+  const emoji = document.getElementById('editCommEmoji').value.trim();
+  if (!name) { toast('Name required','error'); return; }
+
+  const updates = {name, emoji};
+  const avFile = document.getElementById('editCommAvFile')?.files[0];
+  if (avFile) {
+    const dr = await readFileAsDataUrl(avFile);
+    updates.avatar = await uploadImage(dr, `comm_avatars/${id}`);
+  }
+
+  await dbUpdate('communities/'+id, updates);
+  closeOverlay('overlay-editComm');
+  toast('Community updated ✓','success');
+  renderCommList();
+  renderAdminSection('communities');
+};
+
+// ─── BROADCAST ────────────────────────────────────────────────
+window.updateBcTarget = async function() {
+  const type = document.getElementById('bcType').value;
+  const targetEl = document.getElementById('bcTarget');
+  const group = document.getElementById('bcTargetGroup');
+  group.classList.toggle('hidden', type==='allComms');
+  if (type==='community') {
+    const comms = await dbGet('communities') || {};
+    targetEl.innerHTML = Object.values(comms).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  }
+  if (type==='member') {
+    const users = await dbGet('users') || {};
+    targetEl.innerHTML = Object.values(users).map(u=>`<option value="${u.id}">${esc(u.name)} (${u.id})</option>`).join('');
+  }
+};
+
+window.doBroadcast = async function() {
+  const type = document.getElementById('bcType').value;
+  const target = document.getElementById('bcTarget').value;
+  const msg = document.getElementById('bcMsg').value.trim();
+  if (!msg) { toast('Message required','error'); return; }
+
+  const msgObj = {
+    senderId: currentUser.id,
+    senderName: 'admin',
+    senderAvatar: currentUser.avatar||null,
+    isAdmin: true,
+    ts: Date.now(),
+    type: 'text',
+    text: msg,
+    fileUrl: null,
+  };
+
+  if (type==='allComms') {
+    const comms = await dbGet('communities') || {};
+    for (const id of Object.keys(comms)) await dbPush('messages/'+id, msgObj);
+    toast(`Broadcast sent to ${Object.keys(comms).length} communities 📡`,'success');
+  } else if (type==='community') {
+    await dbPush('messages/'+target, msgObj);
+    toast('Message sent to community','success');
+  } else if (type==='member') {
+    // Send to all communities the member is in
+    const mems = await dbGet('memberships') || {};
+    const memberComms = mems[target] || [];
+    for (const cid of memberComms) await dbPush('messages/'+cid, msgObj);
+    toast(`Message sent to ${memberComms.length} community/communities`,'success');
+  }
+
+  closeOverlay('overlay-broadcast');
+  document.getElementById('bcMsg').value='';
+};
+
+// ─── ADD ADMIN ────────────────────────────────────────────────
+window.doAddAdmin = async function() {
+  const id = document.getElementById('newAdminId').value.trim().toUpperCase();
+  if (!id) { toast('Enter a user ID','error'); return; }
+  const user = await dbGet('users/'+id);
+  if (!user) { toast('User not found','error'); return; }
+  if (user.isAdmin) { toast('Already an admin','info'); return; }
+  await dbUpdate('users/'+id, {isAdmin:true});
+  closeOverlay('overlay-addAdmin');
+  toast(`Admin access granted to ${user.name} (${id})`,'success');
+};
+
+// ─── ADMIN CHAT MODE ──────────────────────────────────────────
+function renderAdminCommList() {
+  dbGet('communities').then(comms => {
+    const el = document.getElementById('adminCommScroll');
+    if (!comms) { el.innerHTML='<div style="padding:20px;color:var(--muted);font-size:13px">No communities</div>'; return; }
+    el.innerHTML = Object.values(comms).map(c=>`
+      <div class="comm-item ${adminCurrentCommId===c.id?'active':''}" onclick="openAdminComm('${c.id}')">
+        <div class="ci-av">${c.avatar?`<img src="${c.avatar}">`:(c.emoji||c.name[0])}</div>
+        <div class="ci-info"><div class="ci-name">${esc(c.name)}</div></div>
+      </div>`).join('');
+  });
+}
+
+window.openAdminComm = async function(id) {
+  adminCurrentCommId = id;
+  renderAdminCommList();
+  const c = await dbGet('communities/'+id);
+  if (!c) return;
+
+  document.getElementById('adminChatEmpty').style.display='none';
+  const ac = document.getElementById('adminChatActive');
+  ac.style.display='flex'; ac.classList.remove('hidden');
+  document.getElementById('adminChAv').innerHTML = c.avatar?`<img src="${c.avatar}">`:(c.emoji||c.name[0]);
+  document.getElementById('adminChName').textContent = c.name;
+
+  if (msgListeners['admin_'+id]) msgListeners['admin_'+id]();
+  msgListeners['admin_'+id] = dbListen('messages/'+id, msgs => renderMessages(msgs,'adminMsgsWrap',true));
+};
+
+window.sendAdminMessage = async function() {
+  if (!adminCurrentCommId || !currentUser) return;
+  const inp = document.getElementById('adminMsgInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  await dbPush('messages/'+adminCurrentCommId, {
+    senderId:currentUser.id, senderName:'admin',
+    senderAvatar:currentUser.avatar||null,
+    isAdmin:true, ts:Date.now(),
+    type:'text', text,
+  });
+  inp.value=''; inp.style.height='auto';
+};
+
+window.onAdminMsgKeydown = function(e) {
+  if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendAdminMessage(); }
+};
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function readFileAsDataUrl(file) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+window.autoResize = function(ta) {
+  ta.style.height='auto';
+  ta.style.height = Math.min(ta.scrollHeight,100)+'px';
+};
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── OVERLAY HELPERS ──────────────────────────────────────────
+window.openOverlay = function(id) { document.getElementById(id)?.classList.add('open'); };
+window.closeOverlay = function(id) { document.getElementById(id)?.classList.remove('open'); };
+
+// Close on backdrop click
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+});
+
+// ─── TOAST ────────────────────────────────────────────────────
+window.toast = function(msg, type='info') {
+  const icons = {success:'✅',error:'❌',info:'ℹ️',warn:'⚠️'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'💬'}</span><span>${msg}</span>`;
+  document.getElementById('toastShelf').appendChild(el);
+  setTimeout(()=>{ el.style.animation='toastSlide .3s ease reverse'; setTimeout(()=>el.remove(),300); },3000);
+};
+
+// ─── START ────────────────────────────────────────────────────
+init().catch(console.error);
+
+</script>
+</body>
+</html>
